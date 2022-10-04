@@ -1,6 +1,7 @@
 import sqlite3
 from functools import wraps
 from flask import Flask, flash, redirect, render_template, request, session, url_for, g
+from forms import AddTaskForm
 
 # config
 app = Flask(__name__)
@@ -96,11 +97,14 @@ def new_task():
         flash("New entry successfully posted.")
         return redirect(url_for('tasks'))
 
-#Mark task as complete
+# Mark task as complete
+
+
 @app.route('/complete/<int:task_id>/')
 @login_required
 def complete(task_id):
     g.db = connect_db()
+    # we have to convert the task_id variable to a string, since we are using string concatenation to combine the SQL query with the task_id, which is an integer.
     g.db.execute(
         'update tasks set status = 0 where task_id='+str(task_id)
     )
@@ -108,6 +112,7 @@ def complete(task_id):
     g.db.close()
     flash('The task was marked as complete')
     return redirect(url_for('tasks'))
+
 
 @app.route('/delete/<int:task_id>/')
 @login_required
@@ -118,4 +123,3 @@ def delete(task_id):
     g.db.close()
     flash('The task was deleted')
     return redirect(url_for('tasks'))
-    
