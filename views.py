@@ -79,9 +79,9 @@ def tasks():
 def new_task():
     g.db = connect_db()
     name = request.form['name']
-    date = request.form['date']
+    due_date = request.form['due_date']
     priority = request.form['priority']
-    if not name or not date or not priority:
+    if not name or not due_date or not priority:
         flash("All fields are required, please try again.")
         return redirect(url_for('tasks'))
     else:
