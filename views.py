@@ -68,7 +68,7 @@ def tasks():
 def new_task():
     form = AddTaskForm(request.form)
     if request.method == 'POST':
-        if form.validate_on_submit():
+        if form.validate():
             new_task = Task(form.name.data, form.due_date.data,
                             form.priority.data, '1')
             db.session.add(new_task)
