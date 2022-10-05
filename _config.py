@@ -8,4 +8,6 @@ PASSWORD = 'admin'
 WTF_CSRF_ENABLET = True
 SECRET_KEY = '@?"v<kn8p6k?uml'
 
-DATABASE_PATH = os.path.join(basedir,DATABASE)
+DATABASE_PATH = os.path.join(basedir, DATABASE)
+
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
