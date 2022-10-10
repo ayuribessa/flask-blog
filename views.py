@@ -36,15 +36,19 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error = None
+    form = LoginForm(request.form)
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME'] or request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid Credentials. Please Try Again.'
-            return render_template('login.html', error=error)
+        if form.validate():
+            user = User.query.filter_by(name=request.form['name']).first()
+            if user is not None and user.password == request.form['password']:
+                session['logged_in'] = True
+                flash('Welcome!')
+                return redirect(url_for('tasks'))
+            else:
+                error = 'Invalid username or password.'
         else:
-            session['logged_in'] = True
-            flash('Welcome!')
-            return redirect(url_for('tasks'))
-    return render_template('login.html')
+            error = 'Both fields are required.'
+    return render_template('login.html', form=form, error=error)
 
 
 @app.route('/tasks/')
@@ -98,6 +102,8 @@ def delete(task_id):
     db.session.commit()
     flash('The task was deleted')
     return redirect(url_for('tasks'))
+
+    
 @app.route('/register/', methods = ['GET','POST'])
 def register():
     error = None
@@ -109,4 +115,6 @@ def register():
             db.session.commit()
             flash('Thanks for Registering. Please login')
             return redirect(url_for('login'))
+        else:
+            flash('Algo deu errado no registro')
     return render_template('register.html',form=form,error=error)
