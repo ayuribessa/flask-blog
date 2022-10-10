@@ -104,17 +104,19 @@ def delete(task_id):
     return redirect(url_for('tasks'))
 
     
-@app.route('/register/', methods = ['GET','POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register():
     error = None
     form = RegisterForm(request.form)
     if request.method == 'POST':
-        if form.validate():
-            new_user = User(form.name.data, form.email.data, form.password.data)
+        if form.validate_on_submit():
+            new_user = User(
+                form.name.data,
+                form.email.data,
+                form.password.data,
+            )
             db.session.add(new_user)
             db.session.commit()
-            flash('Thanks for Registering. Please login')
+            flash('Thanks for registering. Please login.')
             return redirect(url_for('login'))
-        else:
-            flash('Algo deu errado no registro')
-    return render_template('register.html',form=form,error=error)
+    return render_template('register.html', form=form, error=error)
