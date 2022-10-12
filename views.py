@@ -109,7 +109,7 @@ def register():
     error = None
     form = RegisterForm(request.form)
     if request.method == 'POST':
-        if form.validate_on_submit():
+        if form.validate():
             new_user = User(
                 form.name.data,
                 form.email.data,
