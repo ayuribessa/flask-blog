@@ -1,3 +1,4 @@
+from datetime import datetime
 from functools import wraps
 from urllib.request import Request
 from flask import Flask, flash, redirect, render_template, request, session, url_for, g
@@ -75,7 +76,7 @@ def new_task():
     if request.method == 'POST':
         if form.validate():
             new_task = Task(form.name.data, form.due_date.data,
-                            form.priority.data, '1')
+                            form.priority.data,datetime.datetime.utcnow() ,'1','1')
             db.session.add(new_task)
             db.session.commit()
             flash('New entry was successfully posted')
