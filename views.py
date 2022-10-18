@@ -12,6 +12,10 @@ from models import Task, User
 
 # helper functions
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f"Error in the {getattr(form,field).label.text} - {error}")
 
 def login_required(test):
     @wraps(test)
@@ -24,7 +28,6 @@ def login_required(test):
     return wrap
 
 # route handlers
-
 
 @app.route('/logout/')
 def logout():
@@ -73,6 +76,7 @@ def tasks():
 @app.route('/add/', methods=['GET', 'POST'])
 @login_required
 def new_task():
+    error = None
     form = AddTaskForm(request.form)
     if request.method == 'POST':
         if form.validate():
@@ -83,9 +87,8 @@ def new_task():
             flash('New entry was successfully posted')
             return redirect(url_for('tasks'))
         else:
-            flash('All fields are required.')
-            return redirect(url_for('tasks'))
-    return render_template('tasks.html',form=form)
+            return render_template('tasks.html',form=form,error=error)
+    return render_template('tasks.html',form=form,error=error)
 
 # Mark task as complete
 
