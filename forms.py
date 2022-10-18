@@ -8,8 +8,8 @@ class AddTaskForm(Form):
     task_id = IntegerField()
     name = StringField('Task Name', validators=[DataRequired()])
     due_date = DateField(
-        'Date Due (mm/dd/yyyy)',
-        validators=[DataRequired()], format='%m/%d/%Y'
+        'Due Date (mm/dd/yyyy)',
+        validators=[DataRequired()] #estava vindo None até que eu retirei o "format"
     )
     priority = SelectField(
         'Priority',

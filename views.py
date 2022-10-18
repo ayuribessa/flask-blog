@@ -1,6 +1,5 @@
-from datetime import datetime
+import datetime
 from functools import wraps
-from urllib.request import Request
 from flask import Flask, flash, redirect, render_template, request, session, url_for, g
 from forms import AddTaskForm, RegisterForm, LoginForm
 from flask_sqlalchemy import SQLAlchemy
