@@ -37,8 +37,8 @@ def login_required(test):
     return wrap
 
 # route handlers
-
 @app.route('/logout/')
+@login_required
 def logout():
     session.pop('logged_in', None)
     session.pop('user_id', None)
