@@ -32,6 +32,20 @@ class Alltests(unittest.TestCase):
     
     def logout(self):
         return self.app.get('/logout',follow_redirects=True)
+
+    def create_user(self,name,email,password):
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+    
+    def create_task(self):
+        return self.app.post('/add', data=dict(
+            name="finish classes",
+            due_date="02/11/2022",
+            priority='1',
+            posted_date="25/10/2022",
+            status="1"
+        ),follow_redirects=True)
     
     #tests
     def test_user_setup(self):
@@ -85,7 +99,37 @@ class Alltests(unittest.TestCase):
         response = self.logout()
         self.assertNotIn(b'Goodbye!',response.data)
 
+    def test_logged_in_users_can_access_tasks_page(self):
+        self.register('fulano','fulano@python.org','python101','python101')
+        self.login('fulano','python101')
+        # response = self.app.get('/tasks')
+        response = self.app.get('/tasks',follow_redirects=True)
+        self.assertEqual(response.status_code,200)
+        self.assertIn(b'Add a new task:', response.data)
 
+    def test_not_logged_in_users_cannot_access_tasks_page(self):
+        response = self.app.get('/tasks',follow_redirects=True)
+        self.assertIn(b'Please login to access your task list.', response.data)
+        
+    def test_users_can_add_tasks(self):
+        self.create_user('Ayuri','ayuri@realpython.org','python')
+        self.login('ayuri','python')
+        self.app.get('/tasks',follow_redirects=True)
+        response = self.create_task()
+        self.assertIn(b'New entry was successfully posted. Thanks.', response.data)
+        
+    def test_users_cannot_add_tasks_when_error(self):
+        self.create_user('Michael', 'michael@realpython.com', 'python')
+        self.login('Michael', 'python')
+        self.app.get('tasks/', follow_redirects=True)
+        response = self.app.post('add/', data=dict(
+            name='Go to the bank',
+            due_date='',
+            priority='1',
+            posted_date='02/05/2014',
+            status='1'
+        ), follow_redirects=True)
+        self.assertIn(b'This field is required.', response.data)
         
 
         
