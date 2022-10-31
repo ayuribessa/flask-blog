@@ -37,8 +37,8 @@ def login_required(test):
     return wrap
 
 # route handlers
-
 @app.route('/logout/')
+@login_required
 def logout():
     session.pop('logged_in', None)
     session.pop('user_id', None)
@@ -89,13 +89,13 @@ def new_task():
                             form.priority.data,datetime.datetime.utcnow() ,'1',session['user_id'])
             db.session.add(new_task)
             db.session.commit()
-            flash('New entry was successfully posted')
+            flash('New entry was successfully posted.')
             return redirect(url_for('tasks'))
     return render_template('tasks.html',form=form,error=error,open_tasks=open_tasks(),closed_tasks=closed_tasks())
 
 # Mark task as complete
 
-
+    
 @app.route('/complete/<int:task_id>/')
 @login_required
 def complete(task_id):
