@@ -31,7 +31,7 @@ def logout():
    return redirect(url_for('users.login'))
 
 
-@users_blueprint.route('/login/',methods = ['GET', 'POST'])
+@users_blueprint.route('/',methods = ['GET', 'POST'])
 def login():
    error = None
    form = LoginForm(request.form)
@@ -49,7 +49,26 @@ def login():
    else:
       return render_template('login.html',form=form, error= error)
       
-      
+@users_blueprint.route('/register/', methods=['GET', 'POST'])
+def register():
+   error = None
+   form = RegisterForm(request.form)
+   if request.method == 'POST':
+      new_user = User(
+         form.data.name,
+         form.data.email,
+         form.data.password,
+      )
+      try:
+         db.session.add(new_user)
+         db.session.commit()
+         flash('Thanks for Registering. Please Login.')
+         return redirect(url_for('users.login'))
+      except IntegrityError:
+         error = 'That username and/or password already exist.'
+         return render_template('register.html', form=form,error=error)
+   else:
+      return render_template('register.html',form=form, error=error)
    
    
 
