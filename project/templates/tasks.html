@@ -6,7 +6,7 @@
 <a href="/logout">Logout</a>
 <div class="add-task">
   <h3>Add a new task:</h3>
-    <form action="{{ url_for('new_task') }}" method="post">
+    <form action="{{ url_for('tasks.new_task') }}" method="post">
       {{ form.csrf_token }}
       <p>
           {{ form.name.label }}: {{ form.name }}
@@ -36,7 +36,7 @@
               {% endfor %}
             {% endif %} 
       </p>
-      <p><input class="btn btn-default" type="submit" value="Submit"></p>
+      <p><input type="button" class="btn btn-m-lg-0" type="submit" value="Submit"></p>
     </form>
 </div>
 <div class="entries">
@@ -63,8 +63,8 @@
           <td width="50px">{{ task.priority }}</td>
           <td width="90px">{{ task.poster.name }}</td>
           <td>
-            <a href="{{ url_for('delete', task_id = task.task_id) }}">Delete</a>  -
-            <a href="{{ url_for('complete', task_id = task.task_id) }}">Mark as Complete</a>
+            <a href="{{ url_for('tasks.delete', task_id = task.task_id) }}">Delete</a>  -
+            <a href="{{ url_for('tasks.complete', task_id = task.task_id) }}">Mark as Complete</a>
           </td>
         </tr>
       {% endfor %}
@@ -95,7 +95,7 @@
           <td width="50px">{{ task.priority }}</td>
           <td width="90px">{{ task.poster.name }}</td>
           <td>
-             <a href="{{ url_for('delete', task_id = task.task_id) }}">Delete</a>
+             <a href="{{ url_for('tasks.delete', task_id = task.task_id) }}">Delete</a>
           </td>
         </tr>
       {% endfor %}
