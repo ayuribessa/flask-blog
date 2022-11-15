@@ -3,7 +3,7 @@ from flask import render_template, redirect, Blueprint, request, session, flash,
 from sqlalchemy.exc import IntegrityError
 
 from .forms import RegisterForm, LoginForm
-from project import db
+from project import db, bcrypt
 from project.models import User
 
 ###### Configs #######
@@ -39,7 +39,7 @@ def login():
    if request.method == 'POST':
       if form.validate():
          user = User.query.filter_by(name=request.form['name']).first()
-         if User is not None and user.password == request.form['password']:
+         if User is not None and bcrypt.check_password_hash(user.password, request.form['password']):
             session['logged_in'] = True 
             session['user_id'] = user.id 
             session['role'] = user.role 
@@ -57,9 +57,9 @@ def register():
    form = RegisterForm(request.form)
    if request.method == 'POST':
       new_user = User(
-         form.data.name,
-         form.data.email,
-         form.data.password,
+         form.data["name"],
+         form.data["email"],
+         bcrypt.generate_password_hash(form.data["password"]),
       )
       try:
          db.session.add(new_user)
