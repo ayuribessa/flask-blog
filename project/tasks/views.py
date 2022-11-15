@@ -36,7 +36,7 @@ def tasks():
 		form=AddTaskForm(request.form),
 		open_tasks=open_tasks(),
 		closed_tasks=closed_tasks(),
-        username=session['name']
+        username=session['user']
 	)
   
 @tasks_blueprint.route('/add/',methods = ['GET', 'POST'])
