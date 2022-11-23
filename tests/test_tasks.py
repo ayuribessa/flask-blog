@@ -172,7 +172,7 @@ class TaskTests(unittest.TestCase):
     def test_task_template_displays_logged_in_user_name(self):
         self.register('ayuri','ayuri@test.com','python101','python101')
         self.login('ayuri','python101')
-        response = self.get('/tasks',follow_redirects=True)
+        response = self.app.get('/tasks',follow_redirects=True)
         self.assertIn(b'ayuri',response.data)
 
     def test_users_cannot_see_task_modify_links_for_tasks_not_created_by_them(self):
@@ -185,7 +185,7 @@ class TaskTests(unittest.TestCase):
         self.assertNotIn(b'Mark as complete', response.data)
         self.assertNotIn(b'Delete', response.data)
 
-    def test_users_cannot_see_task_modify_links_for_tasks_not_created_by_them(self):
+    def test_users_can_see_task_modify_links_for_tasks_created_by_them(self):
         self.register('ayuri','ayuri@test.com','python101','python101')
         self.login('ayuri','python101')
         self.create_task()

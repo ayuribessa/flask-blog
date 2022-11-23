@@ -12,18 +12,18 @@ tasks_blueprint = Blueprint('tasks',__name__)
 
 ##### Helper Functions ######
 def login_required(test):
-   @wraps(test)
-   def wrap(*args, **kwargs):
-      if 'logged_in' in session:
-         return test(*args, **kwargs)
-      else:
-         flash('You need to login first.')
-         return redirect(url_for('users.login'))
-   return wrap
+	@wraps(test)
+	def wrap(*args, **kwargs):
+		if 'logged_in' in session:
+			return test(*args, **kwargs)
+		else:
+			flash('You need to login first.')
+			return redirect(url_for('users.login'))
+	return wrap
 
 def open_tasks():
 	return db.session.query(Task).filter_by(status='1').order_by(Task.due_date.asc())
-  
+
 def closed_tasks():
 	return db.session.query(Task).filter_by(status='0').order_by(Task.due_date.asc())
 
@@ -31,14 +31,14 @@ def closed_tasks():
 @tasks_blueprint.route('/tasks/')
 @login_required
 def tasks():
-  return render_template(
+	return render_template(
 		'tasks.html',
 		form=AddTaskForm(request.form),
 		open_tasks=open_tasks(),
 		closed_tasks=closed_tasks(),
         username=session['user']
 	)
-  
+
 @tasks_blueprint.route('/add/',methods = ['GET', 'POST'])
 @login_required 
 def new_task():
@@ -58,7 +58,7 @@ def new_task():
 			db.session.commit()
 			flash('New entry was successfully posted. Thanks.')
 			return redirect(url_for('tasks.tasks'))
-	render_template(
+	return render_template(
 		'tasks.html',
 		form=form, 
 		error=error,
@@ -93,15 +93,3 @@ def delete(task_id):
     else:
         flash('You can only update tasks that belong to you.')
         return redirect(url_for('tasks.tasks'))
-
-
-  
-		
-
-     
-
-    
-	
-    
-         
-  
