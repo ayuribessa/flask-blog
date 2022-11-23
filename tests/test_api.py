@@ -59,7 +59,7 @@ class APITests(unittest.TestCase):
     ###############
     def test_collection_endpoint_returns_correct_data(self):
         self.add_tasks()
-        response = self.app.get('api/v1/tasks/', follow_redirects=True)
+        response = self.app.get('/api/v1/tasks/', follow_redirects=True)
         self.assertEquals(200, response.status_code)
         self.assertEquals(response.mimetype, 'application/json')
         self.assertIn(b'Run around in circles', response.data)
@@ -67,7 +67,7 @@ class APITests(unittest.TestCase):
 
     def test_resource_endpoint_returns_correct_data(self):
         self.add_tasks()
-        response = self.app.get('api/v1/tasks/2', follow_redirects=True)
+        response = self.app.get('/api/v1/tasks/2', follow_redirects=True)
         self.assertEquals(200, response.status_code)
         self.assertEquals(response.mimetype, 'application/json')
         self.assertNotIn(b'Run around in circles', response.data)

@@ -80,12 +80,8 @@ class UserTests(unittest.TestCase):
         test = db.session.query(User).all()
         for t in test:
             t.name
-        assert t.name == "michael"
+        assert t.name == "ayuri"
 				
-    def test_users_cannot_login_unless_registered(self):
-        response = self.login('foo','bar')
-        self.assertIn(b'Invalid username or password.', response.data)
-
     def test_users_can_login(self):
         self.register('ayuri','ayuri@python.org','python','python')
         response = self.login('ayuri','python')
@@ -93,13 +89,13 @@ class UserTests(unittest.TestCase):
 
     def test_invalid_form_data(self):
         self.register('ayuri', 'ayuri@realpython.com', 'python', 'python')
-        response = self.login('alert("alert box!");', 'foo')
+        response = self.login('bar', 'foo')
         self.assertIn(b'Invalid username or password.', response.data)
         
     def test_user_registration(self):
         self.app.get('/register',follow_redirects=True)
         response = self.register('Michael', 'michael@realpython.com','python','python')
-        self.assertIn(b'Thanks for registering. Please login.',response.data)
+        self.assertIn(b'Thanks for Registering. Please Login.',response.data)
         
     def test_user_registeration_error(self):
         self.app.get('register/', follow_redirects=True)
@@ -109,7 +105,7 @@ class UserTests(unittest.TestCase):
             'Michael', 'michael@realpython.com', 'python', 'python'
         )
         self.assertIn(
-            b'That username and/or email already exist.',
+            b'  That username and/or password already exist.',
             response.data
         )
         

@@ -28,7 +28,7 @@ def logout():
    session.pop('user_id',None)
    session.pop('role',None)
    session.pop('name',None)
-   flash('Goodbye !')
+   flash('Goodbye!')
    return redirect(url_for('users.login'))
 
 
@@ -39,7 +39,7 @@ def login():
    if request.method == 'POST':
       if form.validate():
          user = User.query.filter_by(name=request.form['name']).first()
-         if User is not None and bcrypt.check_password_hash(user.password, request.form['password']):
+         if (User is not None) and (bcrypt.check_password_hash(user.password, request.form['password'])):
             session['logged_in'] = True 
             session['user_id'] = user.id 
             session['role'] = user.role 
@@ -48,8 +48,9 @@ def login():
             return redirect(url_for('tasks.tasks'))
          else:
             error = 'Invalid username or password'
+            return render_template('login.html',form=form, error=error)
    else:
-      return render_template('login.html',form=form, error= error)
+      return render_template('login.html',form=form, error=error)
       
 @users_blueprint.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -67,7 +68,7 @@ def register():
          flash('Thanks for Registering. Please Login.')
          return redirect(url_for('users.login'))
       except IntegrityError:
-         error = 'That username and/or password already exist.'
+         error = ' That username and/or password already exist.'
          return render_template('register.html', form=form,error=error)
    else:
       return render_template('register.html',form=form, error=error)
